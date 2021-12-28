@@ -57,10 +57,10 @@ func (r *Request) Post() error {
 	return nil
 }
 
-func (r *Request) getResponseBody() io.ReadCloser {
+func (r *Request) GetResponseBody() io.ReadCloser {
 	return r.responseBody
 }
 
-func (r *Request) getBody() []byte {
+func (r *Request) GetBody() []byte {
 	return r.body
 }
