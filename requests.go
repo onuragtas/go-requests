@@ -1,4 +1,4 @@
-package requests
+package go_requests
 
 import (
 	"bytes"
@@ -8,13 +8,13 @@ import (
 )
 
 type Request struct {
-	BaseUrl string
-	EndPoint string
-	Headers interface{}
+	BaseUrl    string
+	EndPoint   string
+	Headers    interface{}
 	Parameters map[interface{}]interface{}
 }
 
-func (r *Request) Get() ([]byte, error)  {
+func (r *Request) Get() ([]byte, error) {
 	resp, err := http.Get(r.BaseUrl + r.EndPoint)
 	if err != nil {
 		return nil, err
@@ -32,7 +32,7 @@ func (r *Request) Post() ([]byte, error) {
 	postBody, _ := json.Marshal(r.Parameters)
 	responseBody := bytes.NewBuffer(postBody)
 
-	resp, err := http.Post(r.BaseUrl + r.EndPoint, "application/json", responseBody)
+	resp, err := http.Post(r.BaseUrl+r.EndPoint, "application/json", responseBody)
 
 	if err != nil {
 		return nil, err
