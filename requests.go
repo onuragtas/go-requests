@@ -22,7 +22,6 @@ func (r *Request) Get() error {
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
 
 	r.responseBody = resp.Body
 
@@ -43,7 +42,6 @@ func (r *Request) Post() error {
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
 
 	r.responseBody = resp.Body
 
@@ -63,4 +61,8 @@ func (r *Request) GetResponseBody() io.ReadCloser {
 
 func (r *Request) GetBody() []byte {
 	return r.body
+}
+
+func (r *Request) CloseResponseBody() {
+	r.responseBody.Close()
 }
