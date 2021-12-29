@@ -11,14 +11,29 @@ import (
 type Request struct {
 	BaseUrl      string
 	EndPoint     string
-	Headers      interface{}
+	Headers      map[string]string
 	Parameters   map[interface{}]interface{}
 	responseBody io.ReadCloser
 	body         []byte
+	response     *http.Response
 }
 
 func (r *Request) Get() error {
-	resp, err := http.Get(r.BaseUrl + r.EndPoint)
+	req, err := http.NewRequest("GET", r.BaseUrl+r.EndPoint, nil)
+	if err != nil {
+		return err
+	}
+
+	if err != nil {
+		return err
+	}
+	for key, value := range r.Headers {
+		req.Header.Set(key, value)
+	}
+
+	resp, err := http.DefaultClient.Do(req)
+	r.response = resp
+
 	if err != nil {
 		return err
 	}
@@ -38,6 +53,7 @@ func (r *Request) Post() error {
 	responseBody := bytes.NewBuffer(postBody)
 
 	resp, err := http.Post(r.BaseUrl+r.EndPoint, "application/json", responseBody)
+	r.response = resp
 
 	if err != nil {
 		return err
