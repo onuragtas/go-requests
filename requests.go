@@ -74,6 +74,14 @@ func (r *Request) Post() error {
 	return nil
 }
 
+func (r *Request) GetResponse() *http.Response {
+	return r.response
+}
+
+func (r *Request) GetStatusCode() interface{} {
+	return r.statusCode
+}
+
 func (r *Request) GetResponseBody() io.ReadCloser {
 	return r.responseBody
 }
