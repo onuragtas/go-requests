@@ -3,7 +3,6 @@ package requests
 import (
 	"bytes"
 	"encoding/json"
-	"gopkg.in/headzoo/surf.v1"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -16,9 +15,14 @@ type Request struct {
 	Parameters   map[interface{}]interface{}
 	responseBody io.ReadCloser
 	body         []byte
+	requestBody  *[]byte
 	response     *http.Response
 	statusCode   interface{}
 	Links        []string
+}
+
+func (r *Request) CloseResponseBody() {
+	r.responseBody.Close()
 }
 
 func (r *Request) Get() error {
@@ -52,8 +56,13 @@ func (r *Request) Get() error {
 }
 
 func (r *Request) Post() error {
-	postBody, _ := json.Marshal(r.Parameters)
-	responseBody := bytes.NewBuffer(postBody)
+	var responseBody *bytes.Buffer
+	if r.requestBody != nil {
+		responseBody = bytes.NewBuffer(*r.requestBody)
+	} else {
+		postBody, _ := json.Marshal(r.Parameters)
+		responseBody = bytes.NewBuffer(postBody)
+	}
 
 	resp, err := http.Post(r.BaseUrl+r.EndPoint, "application/json", responseBody)
 	r.response = resp
@@ -72,50 +81,4 @@ func (r *Request) Post() error {
 	r.body = body
 
 	return nil
-}
-
-func (r *Request) GetResponse() *http.Response {
-	return r.response
-}
-
-func (r *Request) GetStatusCode() interface{} {
-	return r.statusCode
-}
-
-func (r *Request) GetResponseBody() io.ReadCloser {
-	return r.responseBody
-}
-
-func (r *Request) GetBody() []byte {
-	return r.body
-}
-
-func (r *Request) CloseResponseBody() {
-	r.responseBody.Close()
-}
-
-func (r *Request) GetWithJS() error {
-	var links []string
-	bow := surf.NewBrowser()
-	err := bow.Open(r.BaseUrl + r.EndPoint)
-	if err != nil {
-		panic(err)
-	}
-
-	if bow.StatusCode() == 403 {
-		bow.Reload()
-	}
-
-	for _, link := range bow.Links() {
-		links = append(links, link.Url().String())
-	}
-
-	r.Links = links
-
-	r.statusCode = bow.StatusCode()
-
-	r.body = []byte(bow.Body())
-
-	return nil
-
 }
