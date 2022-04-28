@@ -1,5 +1,5 @@
 package requests
 
-func (r *Request) setRequestBody(body *[]byte) {
+func (r *Request) SetRequestBody(body *[]byte) {
 	r.requestBody = body
 }
