@@ -55,6 +55,36 @@ func (r *Request) Get() error {
 	return nil
 }
 
+func (r *Request) Delete() error {
+	req, err := http.NewRequest("DELETE", r.BaseUrl+r.EndPoint, nil)
+	if err != nil {
+		return err
+	}
+
+	if err != nil {
+		return err
+	}
+	for key, value := range r.Headers {
+		req.Header.Set(key, value)
+	}
+
+	resp, err := http.DefaultClient.Do(req)
+	r.response = resp
+
+	if err != nil {
+		return err
+	}
+
+	r.responseBody = resp.Body
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+	r.body = body
+	return nil
+}
+
 func (r *Request) Post() error {
 	var responseBody *bytes.Buffer
 	if r.requestBody != nil {
