@@ -3,6 +3,7 @@ package requests
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -12,7 +13,7 @@ type Request struct {
 	BaseUrl      string
 	EndPoint     string
 	Headers      map[string]string
-	Parameters   map[interface{}]interface{}
+	Parameters   map[string]interface{}
 	responseBody io.ReadCloser
 	body         []byte
 	requestBody  *[]byte
@@ -90,7 +91,10 @@ func (r *Request) Post() error {
 	if r.requestBody != nil {
 		responseBody = bytes.NewBuffer(*r.requestBody)
 	} else {
-		postBody, _ := json.Marshal(r.Parameters)
+		postBody, err := json.Marshal(r.Parameters)
+		if err != nil {
+			fmt.Println(err)
+		}
 		responseBody = bytes.NewBuffer(postBody)
 	}
 
