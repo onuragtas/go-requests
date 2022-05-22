@@ -94,7 +94,19 @@ func (r *Request) Post() error {
 		responseBody = bytes.NewBuffer(postBody)
 	}
 
-	resp, err := http.Post(r.BaseUrl+r.EndPoint, "application/json", responseBody)
+	req, err := http.NewRequest("POST", r.BaseUrl+r.EndPoint, responseBody)
+	if err != nil {
+		return err
+	}
+
+	if err != nil {
+		return err
+	}
+	for key, value := range r.Headers {
+		req.Header.Set(key, value)
+	}
+
+	resp, err := http.DefaultClient.Do(req)
 	r.response = resp
 
 	if err != nil {
@@ -107,8 +119,6 @@ func (r *Request) Post() error {
 	if err != nil {
 		return err
 	}
-
 	r.body = body
-
 	return nil
 }
