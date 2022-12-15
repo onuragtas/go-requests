@@ -47,6 +47,7 @@ func (r *Request) Get() error {
 	}
 
 	r.responseBody = resp.Body
+	r.statusCode = resp.StatusCode
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
@@ -77,6 +78,7 @@ func (r *Request) Delete() error {
 	}
 
 	r.responseBody = resp.Body
+	r.statusCode = resp.StatusCode
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
@@ -118,6 +120,8 @@ func (r *Request) Post() error {
 	}
 
 	r.responseBody = resp.Body
+
+	r.statusCode = resp.StatusCode
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
