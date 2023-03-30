@@ -18,7 +18,7 @@ type Request struct {
 	body         []byte
 	requestBody  *[]byte
 	response     *http.Response
-	statusCode   interface{}
+	statusCode   int
 	Links        []string
 }
 
