@@ -10,7 +10,7 @@ func (r *Request) GetResponse() *http.Response {
 	return r.response
 }
 
-func (r *Request) GetStatusCode() interface{} {
+func (r *Request) GetStatusCode() int {
 	return r.statusCode
 }
 
